@@ -1,4 +1,4 @@
-module webrtc-ffi
+module libgowebrtc
 
 go 1.14
 

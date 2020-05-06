@@ -6,10 +6,8 @@ use std::path::PathBuf;
 fn main() {
     std::process::Command::new("go")
         .current_dir("golang")
-        .args(&["build", "-buildmode=c-archive", "-o", "libgowebrtc.a"])
+        .args(&["build", "-buildmode=c-archive"])
         .output().unwrap();
-
-
 
     // shared library.
     println!("cargo:rustc-link-search=native=./golang");

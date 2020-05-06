@@ -143,15 +143,6 @@ func connection_open_stream(id int) (int, *C.char) {
 	next_stream ++
 
 	return id, nil
-	if err != nil {
-		return -1, C.CString(err.Error())
-	}
-
-	id = next_stream
-	streams[id] = stream
-	next_stream ++
-
-	return id, nil
 }
 
 //export stream_read
