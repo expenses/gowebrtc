@@ -65,8 +65,21 @@ impl Listener {
             id => Ok(Connection(id))
         }
     }
+
+    pub fn multiaddr(&self) -> parity_multiaddr::Multiaddr {
+        let pointer = unsafe {
+            bindings::listener_multiaddr(self.0)
+        };
+
+        let string = unsafe {
+            CStr::from_ptr(pointer)
+        }.to_str().unwrap();
+
+        string.parse().unwrap()
+    }
 }
 
+#[derive(Debug)]
 pub struct Connection(pub i64);
 
 impl Connection {
@@ -90,6 +103,30 @@ impl Connection {
             -1 => Err(ptr_to_io_error(result.r1)),
             id => Ok(Stream(id))
         }
+    }
+
+    pub fn local_multiaddr(&self) -> parity_multiaddr::Multiaddr {
+        let pointer = unsafe {
+            bindings::connection_local_multiaddr(self.0)
+        };
+
+        let string = unsafe {
+            CStr::from_ptr(pointer)
+        }.to_str().unwrap();
+
+        string.parse().unwrap()
+    }
+
+    pub fn remote_multiaddr(&self) -> parity_multiaddr::Multiaddr {
+        let pointer = unsafe {
+            bindings::connection_remote_multiaddr(self.0)
+        };
+
+        let string = unsafe {
+            CStr::from_ptr(pointer)
+        }.to_str().unwrap();
+
+        string.parse().unwrap()
     }
 }
 
@@ -164,7 +201,7 @@ fn ptr_to_io_error(pointer: *const c_char) -> std::io::Error {
     std::io::Error::new(
         std::io::ErrorKind::Other,
         unsafe {
-            CStr::from_ptr(pointer).to_str().unwrap()
-        }
+            CStr::from_ptr(pointer)
+        }.to_str().unwrap()
     )
 }

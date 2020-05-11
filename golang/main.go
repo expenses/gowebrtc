@@ -106,6 +106,12 @@ func listener_accept(id int) (int, *C.char) {
 	return id, nil
 }
 
+//export listener_multiaddr
+func listener_multiaddr(id int) *C.char {
+	listener := listeners[id]
+	return C.CString(listener.Multiaddr().String())
+}
+
 //export listener_close
 func listener_close(id int) {
 	listener := listeners[id]
@@ -143,6 +149,18 @@ func connection_open_stream(id int) (int, *C.char) {
 	next_stream ++
 
 	return id, nil
+}
+
+//export connection_local_multiaddr
+func connection_local_multiaddr(id int) *C.char {
+	connection := connections[id]
+	return C.CString(connection.LocalMultiaddr().String())
+}
+
+//export connection_remote_multiaddr
+func connection_remote_multiaddr(id int) *C.char {
+	connection := connections[id]
+	return C.CString(connection.LocalMultiaddr().String())
 }
 
 //export stream_read
